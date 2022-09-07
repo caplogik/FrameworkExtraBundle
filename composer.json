@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "license": "MIT",
 	"require": {
-        "php": "^7.3.31 || ^8.0",
+        "php": "^7.3.28 || ^8.0",
         "symfony/config": "^4.4 || ^5.4 || ^6.0",
         "symfony/dependency-injection": "^4.4 || ^5.4 || ^6.0",
         "symfony/form": "^4.4 || ^5.4 || ^6.0",
