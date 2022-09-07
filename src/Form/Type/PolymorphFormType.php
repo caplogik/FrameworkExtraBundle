@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PolymorphFormType extends AbstractType
@@ -24,15 +25,29 @@ class PolymorphFormType extends AbstractType
         // We don't provide a data_class but the default value should not be a
         $resolver->setDefault('empty_data', null);
 
-        $resolver->define('mapping')
-            ->required()
-            ->default(function (OptionsResolver $resolver) {
-                $resolver->setPrototype(true);
-                $resolver->define('class')->allowedTypes('string')->required();
-                $resolver->define('type')->allowedTypes('string')->required();
-                $resolver->define('label')->allowedTypes('string')->required();
-                $resolver->define('options')->allowedTypes('array')->default([]);
-            });
+        $resolver->setRequired('mapping');
+        $resolver->setAllowedTypes('mapping', ['array']);
+
+        $resolver->setNormalizer('mapping', function (Options $options, $value) {
+            foreach ($value as $discriminator => $config) {
+                if (!array_key_exists('options', $config)) {
+                    $value[$discriminator]['options'] = [];
+                }
+            }
+
+            return $value;
+        });
+
+        // prototype only available for sf 5
+        // $resolver->define('mapping')
+        //     ->required()
+        //     ->default(function (OptionsResolver $resolver) {
+        //         $resolver->setPrototype(true);
+        //         $resolver->define('class')->allowedTypes('string')->required();
+        //         $resolver->define('type')->allowedTypes('string')->required();
+        //         $resolver->define('label')->allowedTypes('string')->required();
+        //         $resolver->define('options')->allowedTypes('array')->default([]);
+        //     });
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

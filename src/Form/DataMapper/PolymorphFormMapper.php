@@ -8,12 +8,15 @@ use Symfony\Component\Form\Exception\UnexpectedTypeException;
 
 class PolymorphFormMapper implements DataMapperInterface
 {
-    public function __construct(
-        private array $mapping
-    )
-    {}
+    /** @var array */
+    private $mapping;
 
-    public function mapDataToForms($viewData, \Traversable $forms): void
+    public function __construct(array $mapping)
+    {
+        $this->mapping = $mapping;
+    }
+
+    public function mapDataToForms($viewData, $forms): void
     {
         if (null === $viewData) {
             return;
@@ -41,7 +44,7 @@ class PolymorphFormMapper implements DataMapperInterface
         throw new UnexpectedTypeException($viewData, $classes);
     }
 
-    public function mapFormsToData(\Traversable $forms, &$viewData): void
+    public function mapFormsToData($forms, &$viewData): void
     {
         $forms = iterator_to_array($forms);
         $discriminator = $forms[PolymorphFormType::FIELD_DISCRIMINATOR]->getData();
