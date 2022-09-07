@@ -35,7 +35,9 @@ final class PolymorphFormExtension extends AbstractTypeExtension
     {
         return $this->some(
             $this->iterate($form),
-            fn ($form) => $form->getConfig()->getType()->getInnerType() instanceof PolymorphFormType
+            function ($form) {
+                $form->getConfig()->getType()->getInnerType() instanceof PolymorphFormType;
+            }
         );
     }
 
