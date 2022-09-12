@@ -17,7 +17,7 @@ class PolymorphFormType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'caplogik_extra_polymorph_form';
+        return 'caplogik_framework_extra_polymorph_form';
     }
 
     public function configureOptions(OptionsResolver $resolver): void
