@@ -1,0 +1,9 @@
+services:
+    Caplogik\FrameworkExtraBundle\DiscriminatedUnionUtils: ~
+
+    Caplogik\FrameworkExtraBundle\Form\Extension\UseDiscriminatedUnionExtension:
+        tags: [{ name: form.type_extension }]
+        arguments:
+            $discriminatedUnionUtils: '@Caplogik\FrameworkExtraBundle\DiscriminatedUnionUtils'
+
+

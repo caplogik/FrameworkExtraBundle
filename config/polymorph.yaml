@@ -1,3 +1,0 @@
-services:
-    Caplogik\FrameworkExtraBundle\Form\Extension\PolymorphFormExtension:
-        tags: [{ name: form.type_extension }]
