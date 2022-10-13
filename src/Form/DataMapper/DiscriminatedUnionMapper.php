@@ -2,10 +2,9 @@
 
 namespace Caplogik\FrameworkExtraBundle\Form\DataMapper;
 
-use Caplogik\FrameworkExtraBundle\Form\Type\PolymorphFormType;
+use Caplogik\FrameworkExtraBundle\Form\Type\DiscriminatedUnionType;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
-use Symfony\Component\Form\Exception\UnexpectedTypeException;
 
 class DiscriminatedUnionMapper implements DataMapperInterface
 {
@@ -42,19 +41,19 @@ class DiscriminatedUnionMapper implements DataMapperInterface
         }
 
         $forms = iterator_to_array($forms);
-        $forms[PolymorphFormType::FIELD_DISCRIMINATOR]->setData($discriminator);
-        $forms[PolymorphFormType::FIELD_INNER]->setData([$discriminator => $viewData]);
+        $forms[DiscriminatedUnionType::FIELD_DISCRIMINATOR]->setData($discriminator);
+        $forms[DiscriminatedUnionType::FIELD_INNER]->setData([$discriminator => $viewData]);
     }
 
     public function mapFormsToData($forms, &$viewData): void
     {
         $forms = iterator_to_array($forms);
-        $discriminator = $forms[PolymorphFormType::FIELD_DISCRIMINATOR]->getData();
+        $discriminator = $forms[DiscriminatedUnionType::FIELD_DISCRIMINATOR]->getData();
 
         if ($discriminator === null) {
             $viewData = null;
         } else {
-            $viewData = $forms[PolymorphFormType::FIELD_INNER][$discriminator]->getData();
+            $viewData = $forms[DiscriminatedUnionType::FIELD_INNER][$discriminator]->getData();
         }
     }
 }
