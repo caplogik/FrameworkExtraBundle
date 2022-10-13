@@ -16,18 +16,35 @@ class StringMapEntryType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setDefault('translation_domain', 'CaplogikFrameworkExtraBundle');
+
+        $resolver->setDefined('key_options');
+        $resolver->setAllowedTypes('key_options', ['array']);
+        $resolver->setRequired('key_options');
+
         $resolver->setDefined('value_type');
         $resolver->setAllowedTypes('value_type', ['string']);
         $resolver->setRequired('value_type');
 
         $resolver->setDefined('value_options');
         $resolver->setAllowedTypes('value_options', ['array']);
-        $resolver->setDefault('value_options', []);
+        $resolver->setRequired('value_options');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('key', TextType::class);
-        $builder->add('value', $options['value_type'], $options['value_options']);
+        $builder->add('key', TextType::class, array_merge(
+            [
+                'label' => 'string_map.entry.key_label'
+            ],
+            $options['key_options']
+        ));
+
+        $builder->add('value', $options['value_type'], array_merge(
+            [
+                'label' => 'string_map.entry.key_label'
+            ],
+            $options['value_options']
+        ));
     }
 }

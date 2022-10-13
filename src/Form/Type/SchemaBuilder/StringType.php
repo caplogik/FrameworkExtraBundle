@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StringType extends AbstractType
 {
@@ -20,13 +21,19 @@ class StringType extends AbstractType
         return 'caplogik_framework_extra_schema_builder_string';
     }
 
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefault('type', SchemaType::STRING);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('type', HiddenType::class, [
-            'data' => SchemaType::STRING
+        $builder->add('minimumLength', IntegerType::class, [
+            'label' => 'schema.builder.string.minimum_length_label',
         ]);
 
-        $builder->add('minimumLength', IntegerType::class);
-        $builder->add('maximumLength', IntegerType::class);
+        $builder->add('maximumLength', IntegerType::class, [
+            'label' => 'schema.builder.string.maximum_length_label',
+        ]);
     }
 }

@@ -26,6 +26,10 @@ class StringMapType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setDefined('key_options');
+        $resolver->setAllowedTypes('key_options', ['array']);
+        $resolver->setDefault('key_options', []);
+
         $resolver->setDefined('value_type');
         $resolver->setAllowedTypes('value_type', ['string']);
         $resolver->setRequired('value_type');
@@ -34,20 +38,19 @@ class StringMapType extends AbstractType
         $resolver->setAllowedTypes('value_options', ['array']);
         $resolver->setDefault('value_options', []);
 
-        $resolver->setDefaults([
-            'entry_type' => StringMapEntryType::class,
-            'entry_options' => function (Options $options) {
-                return [
+        $resolver->setNormalizer('entry_type', function (Options $options, $value) {
+            return StringMapEntryType::class;
+        });
+
+        $resolver->setNormalizer('entry_options', function (Options $options, $value) {
+            return array_merge(
+                $value,
+                [
+                    'key_options' => $options['key_options'],
                     'value_type' => $options['value_type'],
                     'value_options' => $options['value_options'],
-                ];
-            },
-        ]);
-
-        $resolver->setNormalizer('data', function (Options $options, $value) {
-            dump($value);
-
-            return $value;
+                ]
+            );
         });
     }
 
@@ -75,14 +78,16 @@ class StringMapType extends AbstractType
 
         $builder->addModelTransformer(new CallbackTransformer(
             function ($xs) {
+                dump($xs);
                 return $xs;
             },
             function ($xs) {
+                dump($xs);
                 $ys = [];
 
                 foreach ($xs as ['key' => $key, 'value' => $value]) {
                     if (array_key_exists($key, $ys)) {
-                        throw new TransformationFailedException('Duplicate key detected');
+                        throw new TransformationFailedException('Duplicate key');
                     }
 
                     $ys[$key] = $value;

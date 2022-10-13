@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType as CoreNumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NumberType extends AbstractType
 {
@@ -20,13 +21,20 @@ class NumberType extends AbstractType
         return 'caplogik_framework_extra_schema_builder_number';
     }
 
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefault('type', SchemaType::NUMBER);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('type', HiddenType::class, [
-            'data' => SchemaType::NUMBER
+        $builder->add('minimum', CoreNumberType::class, [
+            'label' => 'schema.builder.number.minimum_label',
+
         ]);
 
-        $builder->add('minimum', CoreNumberType::class);
-        $builder->add('maximum', CoreNumberType::class);
+        $builder->add('maximum', CoreNumberType::class, [
+            'label' => 'schema.builder.number.maximum_label',
+        ]);
     }
 }

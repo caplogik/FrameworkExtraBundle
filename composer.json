@@ -7,7 +7,9 @@
         "symfony/config": "^4.4 || ^5.4 || ^6.0",
         "symfony/dependency-injection": "^4.4 || ^5.4 || ^6.0",
         "symfony/form": "^4.4 || ^5.4 || ^6.0",
-        "symfony/http-kernel": "^4.4 || ^5.4 || ^6.0"
+        "symfony/http-kernel": "^4.4 || ^5.4 || ^6.0",
+        "symfony/translation": "^4.4 || ^5.4 || ^6.0",
+        "symfony/validator": "^4.4 || ^5.4 || ^6.0"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^v5.4 || ^6.0"

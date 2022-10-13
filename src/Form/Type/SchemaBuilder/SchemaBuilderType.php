@@ -22,9 +22,11 @@ class SchemaBuilderType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setDefault('translation_domain', 'CaplogikFrameworkExtraBundle');
+
         $resolver->setDefined('recursion');
         $resolver->setAllowedTypes('recursion', ['int']);
-        $resolver->setDefault('recursion', 4);
+        $resolver->setDefault('recursion', 3);
 
         $resolver->setDefault('discriminator_from', function ($data) {
             return $data['type'] ?? null;
@@ -35,15 +37,15 @@ class SchemaBuilderType extends AbstractType
 
             $union = [
                 SchemaType::BOOLEAN => [
-                    'label' => 'Boolean',
+                    'label' => 'schema.builder.boolean.label',
                     'type' => BooleanType::class,
                 ],
                 SchemaType::NUMBER => [
-                    'label' => 'Number',
+                    'label' => 'schema.builder.number.label',
                     'type' => NumberType::class,
                 ],
                 SchemaType::STRING => [
-                    'label' => 'String',
+                    'label' => 'schema.builder.string.label',
                     'type' => StringType::class,
                 ],
             ];
@@ -53,14 +55,14 @@ class SchemaBuilderType extends AbstractType
 
                 $union = array_merge($union, [
                     SchemaType::ARRAY => [
-                        'label' => 'Array',
+                        'label' => 'schema.builder.array.label',
                         'type' => ArrayType::class,
                         'options' => [
                             'recursion' => $childRecursion,
                         ],
                     ],
                     SchemaType::OBJECT => [
-                        'label' => 'Object',
+                        'label' => 'schema.builder.object.label',
                         'type' => ObjectType::class,
                         'options' => [
                             'recursion' => $childRecursion,

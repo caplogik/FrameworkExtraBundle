@@ -23,6 +23,8 @@ class ObjectType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setDefault('type', SchemaType::OBJECT);
+
         $resolver->setDefined('recursion');
         $resolver->setAllowedTypes('recursion', ['int']);
         $resolver->setRequired('recursion');
@@ -30,11 +32,11 @@ class ObjectType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('type', HiddenType::class, [
-            'data' => SchemaType::OBJECT
-        ]);
-
         $builder->add('properties', StringMapType::class, [
+            'label' => 'schema.builder.object.properties_label',
+            'entry_options' => [
+                'label' => false
+            ],
             'value_type' => SchemaBuilderType::class,
             'value_options' => [
                 'recursion' => $options['recursion'],

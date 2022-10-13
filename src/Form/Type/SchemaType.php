@@ -2,35 +2,45 @@
 
 namespace Caplogik\FrameworkExtraBundle\Form\Type;
 
-use Caplogik\FrameworkExtraBundle\SchemaType;
+use Caplogik\FrameworkExtraBundle\SchemaType as Type;
 use RuntimeException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SchemaFormType extends AbstractType
+class SchemaType extends AbstractType
 {
     public function getBlockPrefix()
     {
-        return 'caplogik_framework_extra_schema_form';
+        return 'caplogik_framework_extra_schema';
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('schema');
         $resolver->setAllowedTypes('schema', ['array']);
+        // TODO: symfony need compound root form but we can use a simple datatransformer
+        $resolver->setAllowedValues('schema', function ($schema) {
+            dump($schema);
+            return $schema['type'] === Type::OBJECT;
+        });
+
+        $resolver->setDefault('label', function (Options $options) {
+            return $options['schema']['label'];
+        });
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $schema = $options['schema'];
 
-        if ($schema['type'] !== SchemaType::OBJECT) {
-            throw new RuntimeException('Root schema type should be object');
-            // TODO: symfony need compound root form but we can use a simple datatransformer
-        }
+        // if ($schema['type'] !== Type::OBJECT) {
+        //     throw new RuntimeException('Root schema type should be object');
+
+        // }
 
         foreach ($schema['properties'] as $name => $property) {
             [$formType, $formOptions] = $this->getFormTuple($property);
@@ -47,18 +57,21 @@ class SchemaFormType extends AbstractType
     private function getFormTuple(array $schema)
     {
         $schemaType = $schema['type'];
+        $required = $schema['required'] ?? false;
+        $constraints = [];
 
-        $constraints = [
-            new Assert\NotNull()
-        ];
+        if ($required) {
+            $constraints[] = new Assert\NotNull();
+        }
 
-        if ($schemaType === SchemaType::BOOLEAN) {
+        if ($schemaType === Type::BOOLEAN) {
             $constraints[] = new Assert\Type(['type' => 'boolean']);
 
             return [Form\CheckboxType::class, [
-                'constraints' => $constraints
+                'constraints' => $constraints,
+                'required' => $required,
             ]];
-        } elseif ($schemaType === SchemaType::NUMBER) {
+        } elseif ($schemaType === Type::NUMBER) {
             $constraints[] = new Assert\Type(['type' => 'numeric']);
 
             $rangeConstraint = $this->getRangedConstraint(
@@ -72,9 +85,10 @@ class SchemaFormType extends AbstractType
             }
 
             return [Form\NumberType::class, [
-                'constraints' => $constraints
+                'constraints' => $constraints,
+                'required' => $required,
             ]];
-        } elseif ($schemaType === SchemaType::STRING) {
+        } elseif ($schemaType === Type::STRING) {
             $constraints[] = new Assert\Type([
                 'type' => 'string'
             ]);
@@ -91,8 +105,9 @@ class SchemaFormType extends AbstractType
 
             return [Form\TextType::class, [
                 'constraints' => $constraints,
+                'required' => $required,
             ]];
-        } elseif ($schemaType === SchemaType::ARRAY) {
+        } elseif ($schemaType === Type::ARRAY) {
             [$formType, $formOptions] = $this->getFormTuple($schema['items']);
 
             $constraints[] = new Assert\Type([
@@ -109,7 +124,6 @@ class SchemaFormType extends AbstractType
                 $constraints[] = $countConstraint;
             }
 
-
             return [Form\CollectionType::class, [
                 'entry_type' => $formType,
                 'entry_options' => array_merge(['label' => false], $formOptions),
@@ -117,10 +131,12 @@ class SchemaFormType extends AbstractType
                 'allow_delete' => true,
                 'constraints' => $constraints,
                 'error_bubbling' => false,
+                'required' => $required,
             ]];
-        } elseif ($schemaType === SchemaType::OBJECT) {
-            return [SchemaFormType::class, [
+        } elseif ($schemaType === Type::OBJECT) {
+            return [SchemaType::class, [
                 'schema' => $schema,
+                'required' => $required,
                 'constraints' => $constraints,
             ]];
         } else {

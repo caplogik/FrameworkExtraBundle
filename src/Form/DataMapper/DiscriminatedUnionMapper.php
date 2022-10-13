@@ -50,6 +50,11 @@ class DiscriminatedUnionMapper implements DataMapperInterface
     {
         $forms = iterator_to_array($forms);
         $discriminator = $forms[PolymorphFormType::FIELD_DISCRIMINATOR]->getData();
-        $viewData = $forms[PolymorphFormType::FIELD_INNER][$discriminator]->getData();
+
+        if ($discriminator === null) {
+            $viewData = null;
+        } else {
+            $viewData = $forms[PolymorphFormType::FIELD_INNER][$discriminator]->getData();
+        }
     }
 }

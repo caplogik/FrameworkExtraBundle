@@ -4,8 +4,7 @@ namespace Caplogik\FrameworkExtraBundle\Form\Type\SchemaBuilder;
 
 use Caplogik\FrameworkExtraBundle\SchemaType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BooleanType extends AbstractType
 {
@@ -19,10 +18,8 @@ class BooleanType extends AbstractType
         return 'caplogik_framework_extra_schema_builder_boolean';
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $builder->add('type', HiddenType::class, [
-            'data' => SchemaType::BOOLEAN
-        ]);
+        $resolver->setDefault('type', SchemaType::BOOLEAN);
     }
 }

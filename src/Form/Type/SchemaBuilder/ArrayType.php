@@ -23,6 +23,9 @@ class ArrayType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setDefault('translation_domain', 'CaplogikFrameworkExtraBundle');
+        $resolver->setDefault('type', SchemaType::OBJECT);
+
         $resolver->setDefined('recursion');
         $resolver->setAllowedTypes('recursion', ['int']);
         $resolver->setRequired('recursion');
@@ -30,14 +33,16 @@ class ArrayType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('type', HiddenType::class, [
-            'data' => SchemaType::ARRAY
+        $builder->add('minimumCount', IntegerType::class, [
+            'label' => 'schema.builder.array.minimum_count_label',
         ]);
 
-        $builder->add('minimumCount', IntegerType::class);
-        $builder->add('maximumCount', IntegerType::class);
+        $builder->add('maximumCount', IntegerType::class, [
+            'label' => 'schema.builder.array.minimum_count_label',
+        ]);
 
         $builder->add('items', SchemaBuilderType::class, [
+            'label' => 'schema.builder.array.items_label',
             'recursion' => $options['recursion'],
         ]);
     }

@@ -23,6 +23,8 @@ class DiscriminatedUnionType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setDefault('translation_domain', 'CaplogikFrameworkExtraBundle');
+
         // We don't provide a data_class but the default value should not be a empty array
         $resolver->setDefault('empty_data', null);
 
@@ -31,6 +33,14 @@ class DiscriminatedUnionType extends AbstractType
 
         $resolver->setRequired('discriminator_from');
         $resolver->setAllowedTypes('discriminator_from', ['callable']);
+
+        $resolver->setDefined('discriminator_options');
+        $resolver->setAllowedTypes('discriminator_options', ['array']);
+        $resolver->setDefault('discriminator_options', []);
+
+        $resolver->setDefined('inner_options');
+        $resolver->setAllowedTypes('inner_options', ['array']);
+        $resolver->setDefault('inner_options', []);
 
         // prototype only available for sf 5
         // $resolver->define('union')
@@ -48,6 +58,8 @@ class DiscriminatedUnionType extends AbstractType
         [
             'union' => $union,
             'discriminator_from' => $discriminatorFrom,
+            'discriminator_options' => $discriminatorOptions,
+            'inner_options' => $innerOptions,
         ] = $options;
 
         $builder->setDataMapper(new DiscriminatedUnionMapper($union, $discriminatorFrom));
@@ -56,15 +68,33 @@ class DiscriminatedUnionType extends AbstractType
             foreach ($union as $discriminator => $config) yield $config['label'] => $discriminator;
         })());
 
-        $builder->add(self::FIELD_DISCRIMINATOR, ChoiceType::class, [
-            'choices' => $choices,
-        ]);
+        $builder->add(
+            self::FIELD_DISCRIMINATOR,
+            ChoiceType::class,
+            array_merge(
+                $discriminatorOptions,
+                [
+                    'label' => 'discriminated_union.discriminator_label',
+                    'choices' => $choices,
+                    'required' => $options['required']
+                ]
+            )
+        );
 
-        $inner = $builder->create(self::FIELD_INNER, FormType::class);
+        $inner = $builder->create(self::FIELD_INNER, FormType::class, $innerOptions);
         $builder->add($inner);
 
         foreach ($union as $discriminator => $config) {
-            $inner->add($discriminator, $config['type'], $config['options'] ?? []);
+            $inner->add(
+                $discriminator,
+                $config['type'],
+                array_merge(
+                    [
+                        'label' => false
+                    ],
+                    $config['options'] ?? [],
+                )
+            );
         }
     }
 }

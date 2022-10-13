@@ -1,0 +1,35 @@
+discriminated_union:
+    discriminator_label: "Type"
+
+string_map:
+    entry:
+        key_label: "Chemin"
+        value_label: "Valeur"
+
+schema:
+    builder:
+        label_label: "Label"
+        required_label: "Requis"
+
+        boolean:
+            label: "Oui/Non"
+
+        number:
+            label: "Nombre"
+            minimum_label: "Minimum"
+            maximum_label: "Maximum"
+
+        string:
+            label: "Texte"
+            minimum_length_label: "Caractères minimum"
+            maximum_length_label: "Caractères maximum"
+
+        array:
+            label: "Collection"
+            minimum_count_label: "Éléments minimum"
+            maximum_count_label: "Éléments maximum"
+            items_label: "Type éléments"
+
+        object:
+            label: "Objet"
+            properties_label: "Propriétés"
