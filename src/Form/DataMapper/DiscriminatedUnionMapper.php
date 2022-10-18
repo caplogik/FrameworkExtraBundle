@@ -42,6 +42,8 @@ class DiscriminatedUnionMapper implements DataMapperInterface
 
         $forms = iterator_to_array($forms);
         $forms[DiscriminatedUnionType::FIELD_DISCRIMINATOR]->setData($discriminator);
+
+        // TODO: handle transformation error
         $forms[DiscriminatedUnionType::FIELD_INNER]->setData([$discriminator => $viewData]);
     }
 

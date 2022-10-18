@@ -3,6 +3,7 @@
 namespace Caplogik\FrameworkExtraBundle\Form\Type;
 
 use Caplogik\FrameworkExtraBundle\SchemaType as Type;
+use DateTimeImmutable;
 use RuntimeException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as Form;
@@ -106,6 +107,20 @@ class SchemaType extends AbstractType
             return [Form\TextType::class, [
                 'constraints' => $constraints,
                 'required' => $required,
+            ]];
+        } elseif ($schemaType === Type::DATE) {
+            $constraints[] = new Assert\Type([
+                // 'type' => DateTimeImmutable::class
+                'type' => 'string'
+            ]);
+
+            $constraints[] = new Assert\Date();
+
+            return [Form\DateType::class, [
+                'constraints' => $constraints,
+                'required' => $required,
+                // 'input' => 'datetime_immutable'
+                'input' => 'string'
             ]];
         } elseif ($schemaType === Type::ARRAY) {
             [$formType, $formOptions] = $this->getFormTuple($schema['items']);

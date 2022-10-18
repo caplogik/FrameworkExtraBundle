@@ -48,6 +48,10 @@ class SchemaBuilderType extends AbstractType
                     'label' => 'schema.builder.string.label',
                     'type' => StringType::class,
                 ],
+                SchemaType::DATE => [
+                    'label' => 'schema.builder.date.label',
+                    'type' => DateType::class,
+                ],
             ];
 
             if ($recursion > 0) {
