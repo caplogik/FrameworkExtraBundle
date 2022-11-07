@@ -24,6 +24,9 @@ schema:
             minimum_length_label: "Minimum length"
             maximum_length_label: "Maximum length"
 
+        date:
+            label: "Date"
+
         array:
             label: "Collection"
             minimum_count_label: "Minimum count"
