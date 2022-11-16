@@ -42,7 +42,7 @@ class StringMapEntryType extends AbstractType
 
         $builder->add('value', $options['value_type'], array_merge(
             [
-                'label' => 'string_map.entry.key_label'
+                'label' => 'string_map.entry.value_label'
             ],
             $options['value_options']
         ));
