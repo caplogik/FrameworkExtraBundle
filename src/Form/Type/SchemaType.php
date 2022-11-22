@@ -110,8 +110,7 @@ class SchemaType extends AbstractType
             ]];
         } elseif ($schemaType === Type::DATE) {
             $constraints[] = new Assert\Type([
-                // 'type' => DateTimeImmutable::class
-                'type' => 'string'
+                'type' => DateTimeImmutable::class
             ]);
 
             $constraints[] = new Assert\Date();
@@ -119,8 +118,7 @@ class SchemaType extends AbstractType
             return [Form\DateType::class, [
                 'constraints' => $constraints,
                 'required' => $required,
-                // 'input' => 'datetime_immutable'
-                'input' => 'string'
+                'input' => 'datetime_immutable'
             ]];
         } elseif ($schemaType === Type::ARRAY) {
             [$formType, $formOptions] = $this->getFormTuple($schema['items']);
