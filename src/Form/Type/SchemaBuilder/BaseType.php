@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BaseType extends AbstractType
 {
@@ -32,7 +33,10 @@ class BaseType extends AbstractType
 
         $builder->add('label', TextType::class, [
             'label' => 'schema.builder.label_label',
-
+            'constraints' => [
+                new Assert\NotBlank(),
+                new Assert\Type('string'),
+            ]
         ]);
 
         // TODO: required doesn't make sense for objects and arrays
