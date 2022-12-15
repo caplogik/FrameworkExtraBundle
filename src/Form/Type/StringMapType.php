@@ -78,11 +78,9 @@ class StringMapType extends AbstractType
 
         $builder->addModelTransformer(new CallbackTransformer(
             function ($xs) {
-                dump($xs);
                 return $xs;
             },
             function ($xs) {
-                dump($xs);
                 $ys = [];
 
                 foreach ($xs as ['key' => $key, 'value' => $value]) {

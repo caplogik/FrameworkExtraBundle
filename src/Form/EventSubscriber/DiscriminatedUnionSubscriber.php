@@ -8,6 +8,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\ClearableErrorsInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\ConstraintViolation;
 
 final class DiscriminatedUnionSubscriber implements EventSubscriberInterface
 {
@@ -41,16 +42,19 @@ final class DiscriminatedUnionSubscriber implements EventSubscriberInterface
 
             $ignoredErrors = [];
 
+            dump(iterator_to_array($form->getErrors()));
+
             foreach ($form->getErrors() as $error) {
+                $cause = $error->getCause();
 
-                $propertyPath = $error->getCause()->getPropertyPath();
+                if (!$cause instanceof ConstraintViolation) {
+                    $ignoredErrors[] = $error;
+                    continue;
+                }
+
+                $propertyPath = $cause->getPropertyPath();
                 $properties = array_slice(explode('.', $propertyPath), 1);
-
                 $iteratedForm = $form;
-
-                dump($properties);
-                dump($iteratedForm);
-                dump($iteratedForm->getConfig()->getType()->getInnerType());
 
                 if ($this->discriminatedUnionUtils->isDiscriminatedUnionType($iteratedForm)) {
                     $discriminator = $iteratedForm->get(DiscriminatedUnionType::FIELD_DISCRIMINATOR)->getData();
