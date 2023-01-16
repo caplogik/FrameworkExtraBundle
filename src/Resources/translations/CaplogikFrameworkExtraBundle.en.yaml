@@ -3,8 +3,8 @@ discriminated_union:
 
 string_map:
     entry:
-        key_label: "Path"
-        value_label: "Value"
+        key_label: "Identifier"
+        value_label: "Content"
 
 schema:
     builder:
