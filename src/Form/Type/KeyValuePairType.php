@@ -6,8 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
-class StringMapEntryType extends AbstractType
+class KeyValuePairType extends AbstractType
 {
     public function getBlockPrefix()
     {
@@ -37,14 +38,25 @@ class StringMapEntryType extends AbstractType
             [
                 'label' => 'string_map.entry.key_label'
             ],
-            $options['key_options']
+            $options['key_options'],
+            [
+                'constraints' => [
+                    new Assert\NotBlank(),
+                    new Assert\Type('string'),
+                ]
+            ]
         ));
 
         $builder->add('value', $options['value_type'], array_merge(
             [
                 'label' => 'string_map.entry.value_label'
             ],
-            $options['value_options']
+            $options['value_options'],
+            [
+                'constraints' => [
+                    new Assert\Valid(),
+                ]
+            ]
         ));
     }
 }

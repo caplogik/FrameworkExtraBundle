@@ -2,10 +2,9 @@
 
 namespace Caplogik\FrameworkExtraBundle\Form\Type\SchemaBuilder;
 
-use Caplogik\FrameworkExtraBundle\Form\Type\StringMapType;
+use Caplogik\FrameworkExtraBundle\Form\Type\KeyValuePairsType;
 use Caplogik\FrameworkExtraBundle\SchemaType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,7 +31,7 @@ class ObjectType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('properties', StringMapType::class, [
+        $builder->add('properties', KeyValuePairsType::class, [
             'label' => 'schema.builder.object.properties_label',
             'entry_options' => [
                 'label' => false

@@ -3,12 +3,10 @@
 namespace Caplogik\FrameworkExtraBundle\Form\Type;
 
 use Caplogik\FrameworkExtraBundle\Form\DataMapper\DiscriminatedUnionMapper;
-use Caplogik\FrameworkExtraBundle\Form\DataMapper\PolymorphFormMapper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DiscriminatedUnionType extends AbstractType

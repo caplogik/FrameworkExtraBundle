@@ -23,9 +23,10 @@ class SchemaType extends AbstractType
     {
         $resolver->setRequired('schema');
         $resolver->setAllowedTypes('schema', ['array']);
-        // TODO: symfony need compound root form but we can use a simple datatransformer
-        $resolver->setAllowedValues('schema', function ($schema) {
-            dump($schema);
+
+        // NOTE: When used at root the form needs to be compound form
+        // We can remove this limitation by using a wrapper with a datatransformer
+        $resolver->setAllowedValues('schema', function (array $schema) {
             return $schema['type'] === Type::OBJECT;
         });
 
@@ -37,11 +38,6 @@ class SchemaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $schema = $options['schema'];
-
-        // if ($schema['type'] !== Type::OBJECT) {
-        //     throw new RuntimeException('Root schema type should be object');
-
-        // }
 
         foreach ($schema['properties'] as $name => $property) {
             [$formType, $formOptions] = $this->getFormTuple($property);

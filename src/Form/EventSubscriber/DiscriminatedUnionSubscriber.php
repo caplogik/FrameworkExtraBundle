@@ -42,8 +42,6 @@ final class DiscriminatedUnionSubscriber implements EventSubscriberInterface
 
             $ignoredErrors = [];
 
-            dump(iterator_to_array($form->getErrors()));
-
             foreach ($form->getErrors() as $error) {
                 $cause = $error->getCause();
 

@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StringMapType extends AbstractType
+class KeyValuePairsType extends AbstractType
 {
     public function getBlockPrefix(): string
     {
@@ -39,11 +39,14 @@ class StringMapType extends AbstractType
         $resolver->setDefault('value_options', []);
 
         $resolver->setNormalizer('entry_type', function (Options $options, $value) {
-            return StringMapEntryType::class;
+            return KeyValuePairType::class;
         });
 
         $resolver->setNormalizer('entry_options', function (Options $options, $value) {
             return array_merge(
+                [
+                    'label' => false
+                ],
                 $value,
                 [
                     'key_options' => $options['key_options'],

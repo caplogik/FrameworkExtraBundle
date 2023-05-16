@@ -38,19 +38,19 @@ class SchemaBuilderType extends AbstractType
             $union = [
                 SchemaType::BOOLEAN => [
                     'label' => 'schema.builder.boolean.label',
-                    'type' => BooleanType::class,
+                    'type' => Value\BooleanType::class,
                 ],
                 SchemaType::NUMBER => [
                     'label' => 'schema.builder.number.label',
-                    'type' => NumberType::class,
+                    'type' => Value\NumberType::class,
                 ],
                 SchemaType::STRING => [
                     'label' => 'schema.builder.string.label',
-                    'type' => StringType::class,
+                    'type' => Value\StringType::class,
                 ],
                 SchemaType::DATE => [
                     'label' => 'schema.builder.date.label',
-                    'type' => DateType::class,
+                    'type' => Value\DateType::class,
                 ],
             ];
 
@@ -60,14 +60,14 @@ class SchemaBuilderType extends AbstractType
                 $union = array_merge($union, [
                     SchemaType::ARRAY => [
                         'label' => 'schema.builder.array.label',
-                        'type' => ArrayType::class,
+                        'type' => Value\ArrayType::class,
                         'options' => [
                             'recursion' => $childRecursion,
                         ],
                     ],
                     SchemaType::OBJECT => [
                         'label' => 'schema.builder.object.label',
-                        'type' => ObjectType::class,
+                        'type' => Value\ObjectType::class,
                         'options' => [
                             'recursion' => $childRecursion,
                         ],

@@ -40,6 +40,7 @@ class BaseType extends AbstractType
         ]);
 
         // TODO: required doesn't make sense for objects and arrays
+        // Can be fixed by adding a new option to conditionnaly add this field
         $builder->add('required', CheckboxType::class, [
             'label' => 'schema.builder.required_label',
             'required' => false
