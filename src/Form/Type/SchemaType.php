@@ -39,8 +39,9 @@ class SchemaType extends AbstractType
     {
         $schema = $options['schema'];
 
-        foreach ($schema['properties'] as $name => $property) {
-            [$formType, $formOptions] = $this->getFormTuple($property);
+        foreach ($schema['order'] as $name) {
+            $property = $schema['properties'][$name];
+            [$formType, $formOptions] = $this->getFormTypeOptionsPair($property);
 
             $builder->add($name, $formType, array_merge(
                 [

@@ -6,6 +6,8 @@ use Caplogik\FrameworkExtraBundle\Form\Type\KeyValuePairsType;
 use Caplogik\FrameworkExtraBundle\SchemaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ObjectType extends AbstractType
@@ -43,5 +45,11 @@ class ObjectType extends AbstractType
             'allow_add' => true,
             'allow_delete' => true,
         ]);
+
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
+            $data = $event->getData();
+            $data['order'] = array_keys($data['properties']);
+            $event->setData($data);
+        });
     }
 }
