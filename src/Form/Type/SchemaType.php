@@ -8,10 +8,20 @@ use RuntimeException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as Form;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @psalm-type BooleanSchema = array{type: 'boolean'}
+ * @psalm-type NumberSchema = array{type: 'number', required?: bool, minimum?: int|float, maximum?: int|float}
+ * @psalm-type StringSchema = array{type: 'string', required?: bool, minimumLength?: int, maximumLength?: int}
+ * @psalm-type DateSchema = array{type: 'date', required: bool}
+ * @psalm-type ArraySchema = array{type: 'array', items: Schema, minimumItems?: int, maximumItems?: int}
+ * @psalm-type ObjectSchema = array{type: 'object', properties: array<string, Schema>, order: list<string>}
+ * @psalm-type Schema = BooleanSchema|NumberSchema|StringSchema|DateSchema|ArraySchema|ObjectSchema
+ */
 class SchemaType extends AbstractType
 {
     public function getBlockPrefix()
@@ -52,7 +62,11 @@ class SchemaType extends AbstractType
         }
     }
 
-    private function getFormTuple(array $schema)
+    /**
+     * @param array $schema
+     * @return array{class-string<FormTypeInterface>, array}
+     */
+    private function getFormTypeOptionsPair(array $schema)
     {
         $schemaType = $schema['type'];
         $required = $schema['required'] ?? false;
@@ -118,7 +132,7 @@ class SchemaType extends AbstractType
                 'input' => 'datetime_immutable'
             ]];
         } elseif ($schemaType === Type::ARRAY) {
-            [$formType, $formOptions] = $this->getFormTuple($schema['items']);
+            [$formType, $formOptions] = $this->getFormTypeOptionsPair($schema['items']);
 
             $constraints[] = new Assert\Type([
                 'type' => 'array'
@@ -154,6 +168,12 @@ class SchemaType extends AbstractType
         }
     }
 
+    /**
+     * @param class-string<Assert\Count|Assert\Length|Assert\Range> $class
+     * @param null|int $min
+     * @param null|int $max
+     * @return null|Assert\Count|Assert\Length|Assert\Range
+     */
     private function getRangedConstraint(string $class, $min, $max)
     {
         if ($min === null && $max === null) {
