@@ -70,9 +70,11 @@ class DiscriminatedUnionType extends AbstractType
             self::FIELD_DISCRIMINATOR,
             ChoiceType::class,
             array_merge(
-                $discriminatorOptions,
                 [
                     'label' => 'discriminated_union.discriminator_label',
+                ],
+                $discriminatorOptions,
+                [
                     'choices' => $choices,
                     'required' => $options['required']
                 ]
