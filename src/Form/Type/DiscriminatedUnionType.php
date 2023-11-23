@@ -62,10 +62,6 @@ class DiscriminatedUnionType extends AbstractType
 
         $builder->setDataMapper(new DiscriminatedUnionMapper($union, $discriminatorFrom));
 
-        $choices = iterator_to_array((function () use ($union) {
-            foreach ($union as $discriminator => $config) yield $config['label'] => $discriminator;
-        })());
-
         $builder->add(
             self::FIELD_DISCRIMINATOR,
             ChoiceType::class,
@@ -75,7 +71,8 @@ class DiscriminatedUnionType extends AbstractType
                 ],
                 $discriminatorOptions,
                 [
-                    'choices' => $choices,
+                    'choices' => \array_keys($union),
+                    'choice_label' => fn ($choice) => $union[$choice]['label'],
                     'required' => $options['required']
                 ]
             )
