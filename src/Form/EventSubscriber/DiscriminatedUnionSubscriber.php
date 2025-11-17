@@ -68,6 +68,12 @@ final class DiscriminatedUnionSubscriber implements EventSubscriberInterface
             $properties = array_slice(explode('.', $propertyPath), 1);
             $iteratedForm = $form;
 
+            // No property path, error will not be remapped elsewhere
+            if ($properties === []) {
+                $ignoredErrors[] = $error;
+                continue;
+            }
+
             // Iterate the form tree using the properties of the violation
             foreach ($properties as $property) {
                 // If the form is a DiscriminatedUnion the iterator is advanced to the correct inner form
@@ -87,6 +93,7 @@ final class DiscriminatedUnionSubscriber implements EventSubscriberInterface
 
                 $iteratedForm = $iteratedForm->get($property);
             }
+
             $iteratedForm->addError($error);
         }
 
